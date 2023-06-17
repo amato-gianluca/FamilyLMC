@@ -15,9 +15,10 @@
     <script class="mocha-init">
         mocha.setup('tdd');
         mocha.checkLeaks();
+        const assert = chai.assert
     </script>
     <script src="LMC.js"></script>
-    <script src="test.calc.js"></script>
+    <script src="test.alu.js"></script>
     <script src="test.mem.js"></script>
     <script src="test.pc.js"></script>
     <script class="mocha-exec">

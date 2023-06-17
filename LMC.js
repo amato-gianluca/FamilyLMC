@@ -1,69 +1,76 @@
 class Memory {
 
+    #mem
+
     constructor() {
-        this.mem = new Array(100).fill(0)
+        this.#mem = new Array(100).fill(0)
     }
 
     read(n) {
-        return this.mem[n]
+        return this.#mem[n]
     }
 
     write(n, val) {
-        this.mem[n] = val % 1000
+        this.#mem[n] = val % 1000
     }
 
     reset() {
-        this.mem=Array(100).fill(0)
+        this.#mem = this.#mem.fill(0)
     }
 }
 
-class Calculator {
+class ALU {
+
+    #accumulator
 
     constructor() {
-        this.calc = 0
+        this.#accumulator = 0
     }
 
     read() {
-        return this.calc
+        return this.#accumulator
     }
 
     write(val) {
-        this.calc = val % 1000
+        this.#accumulator = val % 1000
     }
 
     reset() {
-        this.calc=0
+        this.#accumulator = 0
     }
-    
+
     add(val) {
-        this.calc=(this.calc+val) % 1000
+        this.#accumulator = (this.#accumulator + val) % 1000
     }
 
     sub(val) {
-        this.calc=(this.calc-val); if (this.calc<0) this.calc=this.calc+1000
+        this.#accumulator -= val
+        if (this.#accumulator < 0) this.#accumulator += 1000
     }
 
 }
 
 class PC {
+
+    #pc
+
     constructor() {
-        this.pc = 0
+        this.#pc = 0
     }
 
-    read(){
-        return this.pc
+    read() {
+        return this.#pc
     }
 
-    write(val){
-        this.pc = val % 1000
+    write(val) {
+        this.#pc = val % 1000
     }
 
-    reset(){
-        this.pc = 0
+    reset() {
+        this.#pc = 0
     }
 
-    increment(){
-        this.pc++
-        this.pc = this.pc % 1000
+    increment() {
+        this.#pc = (this.#pc + 1) % 1000
     }
 }

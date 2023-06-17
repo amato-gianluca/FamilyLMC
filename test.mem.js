@@ -1,7 +1,6 @@
-var assert = chai.assert
-
 suite('Memory', function () {
-    var mem = new Memory()
+    let mem = new Memory()
+
     test('read new memory', function () {
         assert.equal(0, mem.read(4))
     })
