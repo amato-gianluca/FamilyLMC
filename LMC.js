@@ -83,6 +83,10 @@ class Input {
     read() {
         throw new Error('Not implemented')
     }
+
+    reset() {
+        throw new Error('Not implemented')
+    }
 }
 
 class ConstantInput extends Input {
@@ -95,6 +99,9 @@ class ConstantInput extends Input {
 
     read() {
         return this.#val
+    }
+
+    reset() {
     }
 }
 
@@ -112,6 +119,9 @@ class ConsoleInput extends Input {
             }
         } while (!ok)
         return data;
+    }
+
+    reset() {
     }
 }
 
@@ -134,11 +144,20 @@ class ArrayInput extends Input {
         else
             return this.#chained.read()
     }
+
+    reset() {
+        this.#i = 0
+        this.#chained.reset()
+    }
 }
 
 class Output {
 
     write(val) {
+        throw new Error('Not implemented')
+    }
+
+    reset() {
         throw new Error('Not implemented')
     }
 }
@@ -156,7 +175,11 @@ class ArrayOutput extends Output {
         this.#outputs.push(val)
     }
 
+    reset() {
+        this.#outputs.length = 0
+    }
+
     get outputs() {
-        return this.#outputs
+        return Array.from(this.#outputs)
     }
 }
