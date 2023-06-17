@@ -20,6 +20,10 @@ class Memory {
     reset() {
         this.#mem = this.#mem.fill(0)
     }
+
+    toString() {
+        //TODO
+    }
 }
 
 class ALU {
@@ -51,6 +55,9 @@ class ALU {
         if (this.#accumulator < 0) this.#accumulator += MAX_VALUE
     }
 
+    toString() {
+        //TODO
+    }
 }
 
 class PC {
@@ -75,6 +82,10 @@ class PC {
 
     increment() {
         this.#pc = (this.#pc + 1) % MAX_VALUE
+    }
+
+    toString() {
+        //TODO
     }
 }
 
@@ -182,4 +193,75 @@ class ArrayOutput extends Output {
     get outputs() {
         return Array.from(this.#outputs)
     }
+}
+
+class CU {
+
+    #mem
+    #pc
+    #alu
+    #inp
+    #out
+
+    constructor(mem, pc, alu, inp, out) {
+        this.#mem = mem
+        this.#pc = pc
+        this.#alu = alu
+        this.#inp = inp
+        this.#out = out
+    }
+
+    executeOne () {
+        const instruction = this.#mem.read(this.#pc)
+        this.#pc.increment()
+        const opcode = instruction / 100
+        const param = instruction % 100
+        switch (opcode) {
+            case 0:
+                // TODO HALT
+                break
+            case 1:
+                // TODO ADD
+                break
+            case 2:
+                // TODO SUB
+                break
+            case 3:
+                // TODO STA
+                break
+            case 4:
+                // TODO ?????
+                break
+            case 5:
+                // TODO LDA
+                break
+            case 6:
+                // TODO BRA
+                break
+            case 7:
+                // TODO BRZ
+                break
+            case 8:
+                // BRP
+                break
+            case 9:
+                // TODO Input/Output
+                break
+
+        }
+    }
+
+    execute() {
+        // TODO: execute instructions until the halt state si reached
+
+    }
+
+    reset() {
+        // TODO: what ??
+    }
+
+    toString() {
+        //TODO
+    }
+
 }
