@@ -1,9 +1,12 @@
+const NUM_LOCATIONS = 100
+const MAX_VALUE = 1000
+
 class Memory {
 
     #mem
 
     constructor() {
-        this.#mem = Array(100).fill(0)
+        this.#mem = Array(NUM_LOCATIONS).fill(0)
     }
 
     read(n) {
@@ -11,7 +14,7 @@ class Memory {
     }
 
     write(n, val) {
-        this.#mem[n] = val % 1000
+        this.#mem[n] = val % MAX_VALUE
     }
 
     reset() {
@@ -32,7 +35,7 @@ class ALU {
     }
 
     write(val) {
-        this.#accumulator = val % 1000
+        this.#accumulator = val % MAX_VALUE
     }
 
     reset() {
@@ -40,12 +43,12 @@ class ALU {
     }
 
     add(val) {
-        this.#accumulator = (this.#accumulator + val) % 1000
+        this.#accumulator = (this.#accumulator + val) % MAX_VALUE
     }
 
     sub(val) {
         this.#accumulator -= val
-        if (this.#accumulator < 0) this.#accumulator += 1000
+        if (this.#accumulator < 0) this.#accumulator += MAX_VALUE
     }
 
 }
@@ -63,7 +66,7 @@ class PC {
     }
 
     write(val) {
-        this.#pc = val % 1000
+        this.#pc = val % MAX_VALUE
     }
 
     reset() {
@@ -71,7 +74,7 @@ class PC {
     }
 
     increment() {
-        this.#pc = (this.#pc + 1) % 1000
+        this.#pc = (this.#pc + 1) % MAX_VALUE
     }
 }
 
