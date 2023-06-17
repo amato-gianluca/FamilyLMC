@@ -173,6 +173,15 @@ class Output {
     }
 }
 
+class ConsoleOutput {
+    write(val) {
+        alert('Output: ' + val)
+    }
+
+    reset() {
+    }
+}
+
 class ArrayOutput extends Output {
 
     #outputs
@@ -211,7 +220,7 @@ class CU {
         this.#out = out
     }
 
-    executeOne () {
+    executeOne() {
         const instruction = this.#mem.read(this.#pc)
         this.#pc.increment()
         const opcode = instruction / 100
