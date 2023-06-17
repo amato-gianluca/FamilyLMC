@@ -17,7 +17,7 @@ class Memory {
     }
 }
 
-class Calcurator {
+class Calculator {
 
     constructor() {
         this.calc = 0
@@ -36,11 +36,11 @@ class Calcurator {
     }
     
     add(val) {
-        this.calc=this.calc+val % 1000
+        this.calc=(this.calc+val) % 1000
     }
 
-    Sub(val) {
-        this.calc=this.calc-val % 1000
+    sub(val) {
+        this.calc=(this.calc-val); if (this.calc<0) this.calc=this.calc+1000
     }
 
 }
