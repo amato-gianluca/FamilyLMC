@@ -11,4 +11,8 @@ class Memory {
     write(n, val) {
         this.mem[n] = val % 1000
     }
+
+    reset() {
+        this.mem=Array(100).fill(0)
+    }
 }
