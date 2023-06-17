@@ -44,3 +44,26 @@ class Calculator {
     }
 
 }
+
+class PC {
+    constructor() {
+        this.pc = 0
+    }
+
+    read(){
+        return this.pc
+    }
+
+    write(val){
+        this.pc = val % 1000
+    }
+
+    reset(){
+        this.pc = 0
+    }
+
+    increment(){
+        this.pc++
+        this.pc = this.pc % 1000
+    }
+}
