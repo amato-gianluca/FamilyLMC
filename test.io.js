@@ -43,24 +43,24 @@ suite('ArrayOutput', function () {
         const output = new ArrayOutput()
         output.write(2)
         output.write(34)
-        const out1 = output.outputs
+        const out1 = output.getOutputs()
         assert.deepEqual ([2,34], out1)
         output.write(999)
         assert.deepEqual ([2,34], out1)
-        assert.deepEqual ([2,34,999], output.outputs)
+        assert.deepEqual ([2,34,999], output.getOutputs())
     })
 
     test('write and reset', function () {
         const output = new ArrayOutput()
         output.write(2)
         output.write(34)
-        const out1 = output.outputs
+        const out1 = output.getOutputs()
         assert.deepEqual([2,34], out1)
         output.reset()
         output.write(10)
         output.write(12)
         output.write(999)
         assert.deepEqual([2,34], out1)
-        assert.deepEqual([10,12,999], output.outputs)
+        assert.deepEqual([10,12,999], output.getOutputs())
     })
 })
