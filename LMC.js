@@ -55,6 +55,13 @@ class ALU {
 
     #accumulator
 
+    #negativeFlag = false
+
+
+    getNegativeFlag() {
+        return this.#negativeFlag
+    }
+
     /**
      * Build an ALU with zero as the current value of the accumulator.
      */
@@ -81,6 +88,7 @@ class ALU {
      */
     reset() {
         this.#accumulator = 0
+        this.#negativeFlag = false
     }
 
     /**
@@ -95,8 +103,11 @@ class ALU {
      */
     sub(val) {
         this.#accumulator -= val
-        if (this.#accumulator < 0) this.#accumulator += MAX_VALUE
+        if (this.#accumulator < 0) {
+            this.#negativeFlag = true
+            this.#accumulator += MAX_VALUE
     }
+}
 
     toString() {
         //TODO
@@ -421,7 +432,8 @@ class CU {
                     this.#pc.write(param)
                 break
             case 8:
-                // BRP
+                if (this.#alu.getNegativeFlag() == false)
+                    this.#pc.write(param)
                 break
             case 9:
                 if (param == 1) {

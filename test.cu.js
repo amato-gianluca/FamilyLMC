@@ -107,4 +107,21 @@ suite('CU', function () {
         cu.execute()
         assert.equal(220, alu.read())
      })
+     
+     test('brp jump cu', function () {
+        pc.reset()
+        mem.write(0,812)
+        cu.executeOne()
+        assert.equal(pc.read(), 12)
+     })
+
+
+     test('brp not jump cu', function () {
+        pc.reset()
+        alu.write(500)
+        alu.sub(900)
+        mem.write(0,813)
+        cu.executeOne()
+        assert.equal(pc.read(), 1)
+     })
 })
