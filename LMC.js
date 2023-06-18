@@ -441,6 +441,7 @@ class CU {
      * Executes instructions until the CU reach the halted state.
      */
     execute() {
+        while (this.#status) this.executeOne()
         // TODO: execute instructions until the halt state si reached
         // if status = false return
     }
@@ -448,8 +449,7 @@ class CU {
     /**
      * Resets the CU.
      */
-    reset() {
-        // TODO: what ??
+    reset() {this.#status=true
     }
 
     toString() {

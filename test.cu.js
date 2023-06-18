@@ -88,10 +88,23 @@ suite('CU', function () {
         assert.equal(1, pc.read())
      })
 
+
      test('halt cu', function () {
         pc.reset()
         mem.write(0,000)
         cu.executeOne()
         assert.equal(cu.getStatus(), false)
+     })
+
+     test('execute', function() {
+        pc.reset()
+        cu.reset()
+        mem.write(0, 520)
+        mem.write(20, 170)
+        mem.write(1, 130)
+        mem.write(30, 50)
+        mem.write(2, 0)
+        cu.execute()
+        assert.equal(220, alu.read())
      })
 })
