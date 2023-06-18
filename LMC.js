@@ -210,16 +210,17 @@ class ConsoleInput extends Input {
 
     read() {
         let ok
+        let parsed
         do {
             ok = true
             const data = prompt("Input: ")
-            const parsed = parseInt(data)
+            parsed = parseInt(data)
             if (isNaN(parsed) || parsed < 0 || parsed > MAX_VALUE) {
                 alert("Please write a number between 0 and " + MAX_VALUE)
                 ok = false
             }
         } while (!ok)
-        return data;
+        return parsed;
     }
 
     /**
@@ -392,10 +393,12 @@ class CU {
                 // TODO ADD
                 break
             case 2:
-                // TODO SUB
+                var a= this.#mem.read(param)
+                this.#alu.sub(a)
                 break
             case 3:
-                // TODO STA
+                var a= this.#alu.read()
+                this.#mem.write(param, a)
                 break
             case 4:
                 // TODO ?????
@@ -414,7 +417,8 @@ class CU {
                 // BRP
                 break
             case 9:
-                // TODO Input/Output
+                if (param==1) {var a=this.#inp.read(); this.#alu.write(a) }
+                if (param==2) {var a=this.#alu.read(); this.#out.write(a) }
                 break
 
         }
