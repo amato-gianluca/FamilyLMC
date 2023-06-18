@@ -379,7 +379,8 @@ class CU {
      * Execute one instruction.
      */
     executeOne() {
-        const instruction = this.#mem.read(this.#pc)
+        const address = this.#pc.read()
+        const instruction = this.#mem.read(address)
         this.#pc.increment()
         const opcode = instruction / 100
         const param = instruction % 100
