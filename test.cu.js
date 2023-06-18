@@ -2,11 +2,12 @@ suite('CU', function () {
     let mem = new Memory()
     let pc = new PC()
     let alu = new ALU()
-    let input = new ConsoleInput()
-    let output = new ConsoleOutput()
+    let input = new ConstantInput(150)
+    let output = new ArrayOutput()
     let cu = new CU(mem, pc, alu, input, output)
 
     test('read new cu', function () {
+        pc.reset()
         mem.write(0, 520)
         mem.write(20, 709)
         cu.executeOne()
@@ -15,38 +16,40 @@ suite('CU', function () {
     })
 
     test('sta', function () {
-
-        mem.write(1, 320)
+        pc.reset()
+        mem.write(0, 320)
         alu.write(650)
         cu.executeOne()
         assert.equal(650, mem.read(20))
-        assert.equal(2, pc.read())
+        assert.equal(1, pc.read())
     })
 
     test('sub', function () {
-        mem.write(2,230)
+        pc.reset()
+        mem.write(0,230)
         mem.write(30, 550)
         alu.write(700)
         cu.executeOne()
         assert.equal (150, alu.read())
-        assert.equal (3, pc.read())
+        assert.equal (1, pc.read())
     })
 
-    /*test('input', function () {
-        mem.write(3, 901)
+    test('input', function () {
+        pc.reset()
+        mem.write(0, 901)
         cu.executeOne()
         assert.equal (150, alu.read())
-        assert.equal (4, pc.read())
-    })*/
-
-    test('output', function () {
-        mem.write(3,902)
-        alu.write(300)
-        cu.executeOne()
-        //assert.equal (300, out.read())
-        assert.equal (4, pc.read())
+        assert.equal (1, pc.read())
     })
 
+    test('output', function () {
+        pc.reset()
+        mem.write(0,902)
+        alu.write(300)
+        cu.executeOne()
+        assert.deepEqual ([300], output.getOutputs())
+        assert.equal (1, pc.read())
+    })
 
     test('add cu', function () {
         pc.reset()

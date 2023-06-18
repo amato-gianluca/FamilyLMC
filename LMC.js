@@ -378,7 +378,7 @@ class CU {
         this.#status = true
     }
 
-    getStatus(){
+    getStatus() {
         return this.#status
     }
     /**
@@ -396,14 +396,14 @@ class CU {
                 break
             case 1:
                 var a = this.#mem.read(param)
-                this.#alu.add(a)                
+                this.#alu.add(a)
                 break
             case 2:
-                var a= this.#mem.read(param)
+                var a = this.#mem.read(param)
                 this.#alu.sub(a)
                 break
             case 3:
-                var a= this.#alu.read()
+                var a = this.#alu.read()
                 this.#mem.write(param, a)
                 break
             case 4:
@@ -417,15 +417,21 @@ class CU {
                 this.#pc.write(param)
                 break
             case 7:
-                if (this.#alu.read()==0)
-                this.#pc.write(param)
+                if (this.#alu.read() == 0)
+                    this.#pc.write(param)
                 break
             case 8:
                 // BRP
                 break
             case 9:
-                if (param==1) {var a=this.#inp.read(); this.#alu.write(a) }
-                if (param==2) {var a=this.#alu.read(); this.#out.write(a) }
+                if (param == 1) {
+                    var a = this.#inp.read()
+                    this.#alu.write(a)
+                }
+                else if (param == 2) {
+                    var a = this.#alu.read()
+                    this.#out.write(a)
+                }
                 break
 
         }
