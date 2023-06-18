@@ -382,7 +382,7 @@ class CU {
         const address = this.#pc.read()
         const instruction = this.#mem.read(address)
         this.#pc.increment()
-        const opcode = instruction / 100
+        const opcode = Math.floor(instruction / 100)
         const param = instruction % 100
         switch (opcode) {
             case 0:
@@ -401,7 +401,8 @@ class CU {
                 // TODO ?????
                 break
             case 5:
-                // TODO LDA
+                var a = this.#mem.read(param)
+                this.#alu.write(a)
                 break
             case 6:
                 // TODO BRA
