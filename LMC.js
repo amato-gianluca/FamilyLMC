@@ -359,6 +359,7 @@ class CU {
     #alu
     #inp
     #out
+    #status
 
     /**
      * Constructor of the Control Unit.
@@ -374,8 +375,12 @@ class CU {
         this.#alu = alu
         this.#inp = inp
         this.#out = out
+        this.#status = true
     }
 
+    getStatus(){
+        return this.#status
+    }
     /**
      * Execute one instruction.
      */
@@ -387,10 +392,11 @@ class CU {
         const param = instruction % 100
         switch (opcode) {
             case 0:
-                // TODO HALT
+                this.#status = false
                 break
             case 1:
-                // TODO ADD
+                var a = this.#mem.read(param)
+                this.#alu.add(a)                
                 break
             case 2:
                 var a= this.#mem.read(param)
@@ -408,10 +414,11 @@ class CU {
                 this.#alu.write(a)
                 break
             case 6:
-                // TODO BRA
+                this.#pc.write(param)
                 break
             case 7:
-                // TODO BRZ
+                if (this.#alu.read()==0)
+                this.#pc.write(param)
                 break
             case 8:
                 // BRP
@@ -429,6 +436,7 @@ class CU {
      */
     execute() {
         // TODO: execute instructions until the halt state si reached
+        // if status = false return
     }
 
     /**

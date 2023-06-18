@@ -46,4 +46,49 @@ suite('CU', function () {
         //assert.equal (300, out.read())
         assert.equal (4, pc.read())
     })
+
+
+    test('add cu', function () {
+        pc.reset()
+        alu.write(10)
+        mem.write(0,120)
+        mem.write(20, 30)
+        cu.executeOne()
+        assert.equal(40, alu.read())
+        assert.equal(1, pc.read())
+     })
+
+
+     test('bra cu', function () {
+        pc.reset()
+        alu.write(10)
+        mem.write(0,615)
+        cu.executeOne()
+        assert.equal(15, pc.read())
+     })
+
+
+     test('brz jump cu', function () {
+        pc.reset()
+        alu.reset()
+        mem.write(0,720)
+        cu.executeOne()
+        assert.equal(20, pc.read())
+     })
+
+
+     test('brz not jump cu', function () {
+        pc.reset()
+        alu.write(3)
+        mem.write(0,740)
+        cu.executeOne()
+        assert.equal(1, pc.read())
+     })
+
+     test('halt cu', function () {
+        pc.reset()
+        mem.write(0,000)
+        cu.executeOne()
+        assert.equal(cu.getStatus(), false)
+     })
 })
