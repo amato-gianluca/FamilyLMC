@@ -13,6 +13,9 @@ const MAX_VALUE = 1000
  */
 class Memory {
 
+    /**
+     * Array keeping the content of the memory cells.
+     */
     #mem
 
     /**
@@ -37,14 +40,14 @@ class Memory {
     }
 
     /**
-     * Reset the memory, replace all values in cells with zero.
+     * Reset the memory and replace all values in cells with zero.
      */
     reset() {
         this.#mem = this.#mem.fill(0)
     }
 
     toString() {
-        //TODO
+        return "Memory: " + this.#mem.toString()
     }
 }
 
@@ -53,11 +56,19 @@ class Memory {
  */
 class ALU {
 
+    /**
+     * The value of the accumulator.
+     */
     #accumulator
 
-    #negativeFlag = false
+    /**
+     * The flag indicating if the last subtract opeation has produced an overflow.
+     */
+    #negativeFlag
 
-
+    /**
+     * Return the current value of the negative flag.
+     */
     getNegativeFlag() {
         return this.#negativeFlag
     }
@@ -67,6 +78,7 @@ class ALU {
      */
     constructor() {
         this.#accumulator = 0
+        this.#negativeFlag = false
     }
 
     /**
@@ -106,11 +118,13 @@ class ALU {
         if (this.#accumulator < 0) {
             this.#negativeFlag = true
             this.#accumulator += MAX_VALUE
+        } else {
+            this.#negativeFlag = false
+        }
     }
-}
 
     toString() {
-        //TODO
+        return "ALU: " + this.#accumulator + " " + "Neg: " + this.#negativeFlag
     }
 }
 
@@ -119,6 +133,9 @@ class ALU {
  */
 class PC {
 
+    /**
+     * The current value of the program counter.
+     */
     #pc
 
     /**
@@ -139,7 +156,7 @@ class PC {
      * Replace the current value of the program counter with val.
      */
     write(val) {
-        this.#pc = val % MAX_VALUE
+        this.#pc = val
     }
 
     /**
@@ -157,7 +174,7 @@ class PC {
     }
 
     toString() {
-        //TODO
+        return "PC: " + this.#pc
     }
 }
 
@@ -165,7 +182,7 @@ class PC {
  * Abstract class for an input device of the LMC.
  *
  * Methods read and reset should be always overriden in subclasses,
- * since this implementation only throw an exception.
+ * since this implementation only throws an exception.
  */
 class Input {
 
@@ -188,11 +205,15 @@ class Input {
  * An input device which always returns the same constant value.
  */
 class ConstantInput extends Input {
+
+    /**
+     * The constant value returned by the device.
+     */
     #val
 
     /**
      * Constructor for the ConstantInput class.
-     * @param {int} val The constant value returned by the device.
+     * @param val The constant value returned by the device.
      */
     constructor(val) {
         super()
@@ -203,13 +224,16 @@ class ConstantInput extends Input {
         return this.#val
     }
 
-
     /**
      * Resets the input device.
      *
      * It does nothing.
      */
     reset() {
+    }
+
+    toString() {
+        return "ConstantInput: " + this.#val
     }
 }
 
@@ -241,6 +265,10 @@ class ConsoleInput extends Input {
      */
     reset() {
     }
+
+    toString() {
+        return "ConsoleInput"
+    }
 }
 
 
@@ -250,14 +278,25 @@ class ConsoleInput extends Input {
  */
 class ArrayInput extends Input {
 
+    /**
+     * The array with input values returned by the read() method.
+     */
     #inputs
+
+    /**
+     * The chained input device to use when the inputs array has no more elements.
+     */
     #chained
+
+    /**
+     * The index of the next element to read from the inputs array.
+     */
     #i
 
     /**
      * Constructor for the ArrayInput class.
-     * @param {Array<int>} inputs The array with input values returned by the read() method.
-     * @param {Input} chained The chained input device to use when the inputs array has no more elements.
+     * @param inputs The array with input values returned by the read() method.
+     * @param chained The chained input device to use when the inputs array has no more elements.
      */
     constructor(inputs, chained) {
         super()
@@ -283,19 +322,33 @@ class ArrayInput extends Input {
         this.#i = 0
         this.#chained.reset()
     }
+
+    toString() {
+        let s = "ArrayInput"
+        for (let i = 0; i < this.#i; i++) {
+            s += " ";
+            s += this.#inputs[i]
+        }
+        if (this.#i < this.#inputs.length) {
+            s += " (" + this.#inputs[this.#i] + ")"
+        }
+        for (let i = this.#i + 1; i < this.#inputs.length; i++) {
+            s += " " + this.#inputs[i]
+        }
+        return "ArrayInput:" + s + " chained to " + this.#chained
+    }
 }
 
 /**
  * Abstract class for an output device.
  *
  * Methods write and reset should be always overriden in subclasses,
- * since this implementation only throw an exception.
+ * since this implementation only throws an exception.
  */
 class Output {
 
     /**
      * Send val to the output device.
-     * @param {int} val The output value
      */
     write(val) {
         throw new Error('Not implemented')
@@ -310,8 +363,7 @@ class Output {
 }
 
 /**
- * An output device which sends all the output to the screen with an
- * alert function.
+ * An output device which sends all the output to the screen with an alert function.
  */
 class ConsoleOutput {
     write(val) {
@@ -332,6 +384,9 @@ class ConsoleOutput {
  */
 class ArrayOutput extends Output {
 
+    /**
+     * The array with the output values.
+     */
     #outputs
 
     constructor() {
@@ -370,6 +425,10 @@ class CU {
     #alu
     #inp
     #out
+
+    /**
+     * The status of the CU. It is true when the CU is running, and false when it is halted.
+     */
     #status
 
     /**
@@ -389,9 +448,22 @@ class CU {
         this.#status = true
     }
 
+    /**
+     * Returns the status of the CU.
+     */
     getStatus() {
         return this.#status
     }
+
+    /**
+     * Method to be called when an unimplemented instruction is found
+     * @param instruction the untimplemented instruction
+     * @param addr the address of the unimplemented instruction
+     */
+    unimplemented(instruction, addr) {
+        this.#status = false;
+    }
+
     /**
      * Execute one instruction.
      */
@@ -418,7 +490,7 @@ class CU {
                 this.#mem.write(param, a)
                 break
             case 4:
-                // TODO ?????
+                this.unimplemented(instruction, address)
                 break
             case 5:
                 var a = this.#mem.read(param)
@@ -444,8 +516,10 @@ class CU {
                     var a = this.#alu.read()
                     this.#out.write(a)
                 }
+                else {
+                    this.unimplemented(instruction, address)
+                }
                 break
-
         }
     }
 
@@ -454,18 +528,53 @@ class CU {
      */
     execute() {
         while (this.#status) this.executeOne()
-        // TODO: execute instructions until the halt state si reached
-        // if status = false return
     }
 
     /**
      * Resets the CU.
      */
-    reset() {this.#status=true
+    reset() {
+        this.#status = true
     }
 
     toString() {
-        //TODO
+        return "CU status: " + this.#status
+    }
+}
+
+/**
+ * The Little Man Computer.
+ */
+class LMC {
+    #mem
+    #pc
+    #alu
+    #inp
+    #out
+    #cu
+
+    /**
+     * Constructor of the LMC
+     * @param {Input} inp The input device to which the computer is connected
+     * @param {Output} out The output device to which the computer is connected
+     */
+    constructor(inp, out) {
+        this.#mem = new Memory()
+        this.#pc = new PC()
+        this.#alu = new ALU()
+        this.#inp = inp
+        this.#out = out
+        this.#cu = new CU(this.#mem, this.#pc, this.#alu, this.#inp, this.#out)
     }
 
+    /**
+     * Resets all components of the LMC with the exception of the memory.
+     */
+    reset() {
+        this.#pc.reset()
+        this.#alu.reset()
+        this.#cu.reset()
+        this.#inp.reset()
+        this.#out.reset()
+    }
 }
