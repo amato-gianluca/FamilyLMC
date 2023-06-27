@@ -19,6 +19,35 @@
         <input id="aluval" type="number" min="0" max="999" maxlength="3" size="3" >
         Negative flag: <input id="aluneg" type="checkbox">
     </fieldset>
+    
+    <fieldset>
+      <legend>Program counter</legend>
+    value<input id="pc" type="number" min="0" max="99" maxlenght="2">
+    </fieldset>
+
+    <fieldset>
+      <legend>Control unit</legend>
+    halt state<input id="cu" type="checkbox">
+    </fieldset>
+
+    <fieldset>
+      <legend>Input &amp; Output</legend>
+    input<textarea name="input" id="input" cols="30" rows="10" style="resize:none"></textarea>
+    output<textarea name="output" id="output" cols="30" rows="10" style="resize:none"></textarea>
+    </fieldset>
+
+    <fieldset>
+      <legend>Buttons</legend>
+    <button id="step">
+    step</button>
+
+    <button id="stop">
+    stop</button>
+
+    <button id="execute">
+    execute</button>
+    </fieldset>
+      
     </div>
 
     <script async src="https://ga.jspm.io/npm:es-module-shims@1.5.5/dist/es-module-shims.js"></script>
