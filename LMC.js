@@ -1,5 +1,5 @@
 /**
- * Number of locations in the LMC memory
+ * Number of locations in the LMC memory.
  */
 const NUM_LOCATIONS = 100
 
@@ -67,13 +67,6 @@ class ALU {
     #negativeFlag
 
     /**
-     * Return the current value of the negative flag.
-     */
-    getNegativeFlag() {
-        return this.#negativeFlag
-    }
-
-    /**
      * Build an ALU with zero as the current value of the accumulator.
      */
     constructor() {
@@ -96,8 +89,22 @@ class ALU {
     }
 
     /**
-     * Reset the ALU, writing zero to the accumulator.
+     * Return the current value of the negative flag.
      */
+    getNegativeFlag() {
+        return this.#negativeFlag
+    }
+
+    /**
+     * Set the current value of the negative flag.
+     */
+    setNegativeFlag(val) {
+        this.#negativeFlag = val;
+    }
+
+    /**
+      * Reset the ALU, writing zero to the accumulator.
+      */
     reset() {
         this.#accumulator = 0
         this.#negativeFlag = false
