@@ -455,6 +455,10 @@ class CU {
         this.#status = true
     }
 
+    setStatus(val) {
+        this.#status=val
+    }
+
     /**
      * Returns the status of the CU.
      */

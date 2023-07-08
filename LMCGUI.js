@@ -56,6 +56,25 @@ class ALUGui extends ALU {
     }
 }
 
+class CUGui extends CU {
+    #guicu
+    constructor(mem, pc, alu, inp, out, guicu) {
+        super(mem, pc, alu, inp, out)
+        this.#guicu = guicu
+
+        guicu.addEventListener('change', () => {
+            this.setStatus(guicu.checked)
+        })
+    }
+
+    setStatus(val) {
+        super.setStatus(val)
+        this.#guicu.checked = val
+    }
+
+
+}
+
 const lmc = new LMC(new ArrayInput(), new ArrayOutput())
 
 const mem = new Memory()
@@ -63,4 +82,4 @@ const pc = new PC()
 const alu = new ALUGui(document.getElementById('aluval'), document.getElementById('aluneg'))
 const inp = new ArrayInput()
 const out = new ArrayOutput()
-const cu = new CU(mem, pc, alu, inp, out)
+const cu = new CUGui(mem, pc, alu, inp, out, document.getElementById("cu")) 
