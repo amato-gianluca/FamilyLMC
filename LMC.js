@@ -177,7 +177,8 @@ class PC {
      * Increment the current value of the program counter.
      */
     increment() {
-        this.#pc = (this.#pc + 1) % MAX_VALUE
+        // this.#pc = (this.#pc + 1) % MAX_VALUE
+        this.write((this.#pc + 1) % MAX_VALUE)
     }
 
     toString() {
