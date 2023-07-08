@@ -115,7 +115,40 @@ class CUGui extends CU {
     }
 }
 
-const mem = new Memory()
+class MemoryGUI extends Memory {
+
+    #memGui = new Array(NUM_LOCATIONS)
+
+    constructor(guiMemTable) {
+        super()
+        let i = 0
+        for (const cell of guiMemTable.querySelectorAll('input')) {
+            this.#memGui[i] = cell
+            cell.location = i
+            cell.addEventListener('change', () => {
+                let n = parseInt(cell.value)
+                if (n > 999) {
+                    window.alert(DATA_RANGE_ERROR);
+                    n = 999
+                } else if (n < 0) {
+                    window.alert(DATA_RANGE_ERROR);
+                    n = 0;
+                }
+                this.write(cell.location, n)
+            })
+            i++
+        }
+
+        this.reset()
+    }
+
+    write(location, val) {
+        super.write(location, val)
+        this.#memGui[location].value = String(val).padStart(3, '0')
+    }
+}
+
+const mem = new MemoryGUI(document.getElementById('mem'))
 const pc = new PCGui(document.getElementById('pcval'))
 const alu = new ALUGui(document.getElementById('aluval'), document.getElementById('aluneg'))
 const inp = new ArrayInput()
