@@ -1,8 +1,6 @@
 const DATA_RANGE_ERROR = 'Data should be between 0 and 999'
 const PC_RANGE_ERROR = 'PC should be between 0 and 99'
 
-
-
 /**
  * A PC connected to a GUI.
  */
@@ -16,20 +14,19 @@ class PCGui extends PC {
         super()
         this.#guiPc = guiPc
 
-        guiPc.value = '0'
+        this.reset()
 
         guiPc.addEventListener('change', () => {
             let n = parseInt(guiPc.value)
-            if (n > 999) {
-                window.alert(DATA_RANGE_ERROR);
+            if (n > 99) {
+                window.alert(PC_RANGE_ERROR);
                 n = 999
             } else if (n < 0) {
-                window.alert(DATA_RANGE_ERROR);
+                window.alert(PC_RANGE_ERROR);
                 n = 0;
             }
             this.write(n)
         })
-        
     }
 
     write(val) {
@@ -39,21 +36,8 @@ class PCGui extends PC {
 
     reset() {
         super.reset()
-        this.#guiPc.value = '0'
-    }
-
-    increment(){
-        super.increment()
-        // this.#guiPc.value = String(parseInt(this.#guiPc.value)+1)
     }
 }
-
-
-
-
-
-
-
 
 /**
  * An ALU connected to a GUI.
@@ -74,8 +58,7 @@ class ALUGui extends ALU {
         this.#guiAcc = guiAcc
         this.#guiNeg = guiNeg
 
-        guiAcc.value = '000'
-        guiNeg.checked = false
+        this.reset()
 
         guiAcc.addEventListener('change', () => {
             let n = parseInt(guiAcc.value)
@@ -88,6 +71,7 @@ class ALUGui extends ALU {
             }
             this.write(n)
         })
+
         guiNeg.addEventListener('change', () => {
             this.setNegativeFlag(guiNeg.checked)
         })
@@ -105,53 +89,48 @@ class ALUGui extends ALU {
 
     reset() {
         super.reset()
-        this.#guiAcc.value = '000'
-        this.#guiNeg.checked = false
     }
 }
 
 class CUGui extends CU {
-    #guicu
-    constructor(mem, pc, alu, inp, out, guicu) {
-        super(mem, pc, alu, inp, out)
-        this.#guicu = guicu
+    /**
+     * GUI component corresponding to the CU halted state
+     */
+    #guiHalt
 
-        guicu.addEventListener('change', () => {
-            this.setStatus(guicu.checked)
+    constructor(mem, pc, alu, inp, out, guiHalt) {
+        super(mem, pc, alu, inp, out)
+        this.#guiHalt = guiHalt
+
+        this.reset()
+
+        guiHalt.addEventListener('change', () => {
+            this.setHalted(guiHalt.checked)
         })
     }
 
-    setStatus(val) {
-        super.setStatus(val)
-        this.#guicu.checked = val
+    setHalted(val) {
+        super.setHalted(val)
+        this.#guiHalt.checked = val
     }
-
-
 }
-
-const lmc = new LMC(new ArrayInput(), new ArrayOutput())
 
 const mem = new Memory()
 const pc = new PCGui(document.getElementById('pcval'))
 const alu = new ALUGui(document.getElementById('aluval'), document.getElementById('aluneg'))
 const inp = new ArrayInput()
 const out = new ArrayOutput()
-var cu = new CUGui(mem, pc, alu, inp, out, document.getElementById("cu")) 
-
+const cu = new CUGui(mem, pc, alu, inp, out, document.getElementById("cu"))
 
 step_button = document.getElementById('step')
 step_button.addEventListener('click', () => {
-    window.alert('step')
     cu.executeOne()
 })
 
-
 execute_button = document.getElementById('execute')
 execute_button.addEventListener('click', () => {
-    window.alert('execute')
     cu.execute()
 })
-
 
 // stop_button = document.getElementById('stop')
 // stop_button.addEventListener('onClick', () => {

@@ -72,7 +72,7 @@ suite('CU', function () {
 
   test('halt', function () {
       cu.executeOne()
-      assert.equal(cu.getStatus(), false)
+      assert.equal(cu.getHalted(), true)
    })
 
    test('bra', function () {

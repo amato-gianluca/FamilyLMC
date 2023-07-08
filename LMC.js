@@ -4,9 +4,14 @@
 const NUM_LOCATIONS = 100
 
 /**
- * Maximum value (+1) allowed in the ALU and in the memory cells.
+ * Number of digits in the LMC memory.
  */
-const MAX_VALUE = 1000
+const NUM_DIGITS = 3
+
+/**
+ * Maximum value +1 of the LMC memory.
+ */
+const MAX_VALUE_P1 = 10 ** NUM_DIGITS
 
 /**
  * The memory of the LMC.
@@ -14,7 +19,7 @@ const MAX_VALUE = 1000
 class Memory {
 
     /**
-     * Array keeping the content of the memory cells.
+     * Array keeping the contents of the memory cells.
      */
     #mem
 
@@ -36,14 +41,15 @@ class Memory {
      * Replace the content of the memory cell n with val.
      */
     write(n, val) {
-        this.#mem[n] = val % MAX_VALUE
+        this.#mem[n] = val
     }
 
     /**
-     * Reset the memory and replace all values in cells with zero.
+     * Reset the memory by replacing all values in cells with zero.
      */
     reset() {
-        this.#mem = this.#mem.fill(0)
+        for (let i = 0; i < NUM_LOCATIONS; i++)
+            this.write(i, 0)
     }
 
     toString() {
@@ -85,7 +91,7 @@ class ALU {
      * Replace the current value of the accumulator with zero.
      */
     write(val) {
-        this.#accumulator = val % MAX_VALUE
+        this.#accumulator = val
     }
 
     /**
@@ -106,27 +112,28 @@ class ALU {
       * Reset the ALU, writing zero to the accumulator.
       */
     reset() {
-        this.#accumulator = 0
-        this.#negativeFlag = false
+        this.write(0)
+        this.setNegativeFlag(false)
     }
 
     /**
      * Add val to the accumulator.
      */
     add(val) {
-        this.#accumulator = (this.#accumulator + val) % MAX_VALUE
+        this.write((this.read() + val) % MAX_VALUE_P1)
     }
 
     /**
      * Subtract val from the accumulator.
      */
     sub(val) {
-        this.#accumulator -= val
-        if (this.#accumulator < 0) {
-            this.#negativeFlag = true
-            this.#accumulator += MAX_VALUE
+        const acc = this.read()
+        if (acc < val) {
+            this.setNegativeFlag(true)
+            this.write(acc - val + MAX_VALUE_P1)
         } else {
-            this.#negativeFlag = false
+            this.setNegativeFlag(false)
+            this.write(acc - val)
         }
     }
 
@@ -170,15 +177,14 @@ class PC {
      * Reset the program value, replacing its value to zero.
      */
     reset() {
-        this.#pc = 0
+        this.write(0)
     }
 
     /**
      * Increment the current value of the program counter.
      */
     increment() {
-        // this.#pc = (this.#pc + 1) % MAX_VALUE
-        this.write((this.#pc + 1) % MAX_VALUE)
+        this.write((this.read() + 1) % MAX_VALUE_P1)
     }
 
     toString() {
@@ -258,8 +264,8 @@ class ConsoleInput extends Input {
             ok = true
             const data = prompt("Input: ")
             parsed = parseInt(data)
-            if (isNaN(parsed) || parsed < 0 || parsed > MAX_VALUE) {
-                alert("Please write a number between 0 and " + MAX_VALUE)
+            if (isNaN(parsed) || parsed < 0 || parsed > MAX_VALUE_P1) {
+                alert("Please write a number between 0 and " + MAX_VALUE_P1)
                 ok = false
             }
         } while (!ok)
@@ -435,9 +441,9 @@ class CU {
     #out
 
     /**
-     * The status of the CU. It is true when the CU is running, and false when it is halted.
+     * The halted state of the CU
      */
-    #status
+    #halted
 
     /**
      * Constructor of the Control Unit.
@@ -453,18 +459,18 @@ class CU {
         this.#alu = alu
         this.#inp = inp
         this.#out = out
-        this.#status = true
+        this.#halted = false
     }
 
-    setStatus(val) {
-        this.#status=val
+    setHalted(val) {
+        this.#halted = val
     }
 
     /**
      * Returns the status of the CU.
      */
-    getStatus() {
-        return this.#status
+    getHalted() {
+        return this.#halted
     }
 
     /**
@@ -473,7 +479,7 @@ class CU {
      * @param addr the address of the unimplemented instruction
      */
     unimplemented(instruction, addr) {
-        this.#status = false;
+        this.setHalted(true)
     }
 
     /**
@@ -487,7 +493,7 @@ class CU {
         const param = instruction % 100
         switch (opcode) {
             case 0:
-                this.#status = false
+                this.setHalted(true)
                 break
             case 1:
                 var a = this.#mem.read(param)
@@ -539,18 +545,18 @@ class CU {
      * Executes instructions until the CU reach the halted state.
      */
     execute() {
-        while (this.#status) this.executeOne()
+        while (!this.getHalted()) this.executeOne()
     }
 
     /**
      * Resets the CU.
      */
     reset() {
-        this.#status = true
+        this.setHalted(false)
     }
 
     toString() {
-        return "CU status: " + this.#status
+        return "CU status: " + (this.#halted ? "halted" : "running")
     }
 }
 
