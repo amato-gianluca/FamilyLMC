@@ -32,18 +32,21 @@ class ALUGui extends ALU {
                 window.alert(DATA_RANGE_ERROR);
                 n = 0;
             }
-            this.#guiAcc.value = String(n).padStart(3, '0')
-            this.write(this.#guiAcc.value)
+            this.write(n)
         })
         guiNeg.addEventListener('change', () => {
-            this.#guiNeg.checked = guiNeg.checked
             this.setNegativeFlag(guiNeg.checked)
         })
     }
 
     write(val) {
         super.write(val)
-        this.#guiAcc.value = val
+        this.#guiAcc.value = String(n).padStart(3, '0')
+    }
+
+    setNegativeFlag(val) {
+        super.setNegativeFlag(val)
+        this.#guiNeg.checked = val
     }
 
     reset() {
